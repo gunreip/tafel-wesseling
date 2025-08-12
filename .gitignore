@@ -26,3 +26,32 @@ git.private.key
 git.private.key.pub
 git.private.key
 git.private.key.pub
+
+# builds / vendors
+/node_modules/
+/vendor/
+/public/build/
+/public/hot
+/public/storage
+
+# IDE
+/.idea/
+/.vscode/
+
+# env & caches
+.env
+.env.*
+.phpunit.result.cache
+.php-cs-fixer.cache
+
+# secrets / certs / keys
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.der
+*.cer
+*.csr
+/storage/*.key
+/storage/*.pem
