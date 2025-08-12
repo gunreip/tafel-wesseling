@@ -1,4 +1,5 @@
 <?php
+// /home/gunreip/code/tafel-wesseling/routes/web.php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,3 +15,12 @@ Route::match(['get','post'], '/session-check', function (Request $request) {
         'status' => session('status'),
     ]);
 });
+
+// --- Admin Routing Group -----------------------------------------------------
+use Illuminate\Support\Facades\Route as _AdminRouteImport;
+
+_AdminRouteImport::middleware('web')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(base_path('routes/admin/web.php'));
+// ---------------------------------------------------------------------------
