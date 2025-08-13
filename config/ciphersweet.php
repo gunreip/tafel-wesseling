@@ -1,51 +1,14 @@
 <?php
 // /home/gunreip/code/tafel-wesseling/config/ciphersweet.php
-
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Backend
-    |--------------------------------------------------------------------------
-    | Üblich: "nacl" (libsodium). Alternativen: "boring", "fips", "custom".
-    */
-    'backend' => env('CIPHERSWEET_BACKEND', 'nacl'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Provider (Kompatibilität)
-    |--------------------------------------------------------------------------
-    | Einige Versionen lesen hieraus (string/file/random/custom) + providers.
-    */
-    'provider' => env('CIPHERSWEET_PROVIDER', 'string'),
-
+    'backend'   => 'nacl',
+    'provider'  => env('CIPHERSWEET_PROVIDER', 'file'),
     'providers' => [
-        'file' => [
-            'path' => env('CIPHERSWEET_FILE_PATH'),
-        ],
-        'string' => [
-            // Primärer Key-Pfad: aus .env
-            'key' => env('CIPHERSWEET_KEY'),
-        ],
-        // 'custom' => \App\Crypto\CustomKeyProviderFactory::class,
+        'file'   => ['path' => env('CIPHERSWEET_FILE_PATH', '/home/gunreip/.config/tafel-wesseling/ciphersweet.key')],
+        'string' => ['key'  => env('CIPHERSWEET_KEY', '')], // leer lassen
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Direktzugriff (Kompatibilität)
-    |--------------------------------------------------------------------------
-    | Manche Komponenten erwarten 'key' oder 'keys.default'.
-    */
-    'key' => env('CIPHERSWEET_KEY'),
-
-    'keys' => [
-        'default' => env('CIPHERSWEET_KEY'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Leerwerte erlauben (Paket-spezifisch)
-    |--------------------------------------------------------------------------
-    */
-    'permit_empty' => env('CIPHERSWEET_PERMIT_EMPTY', false),
+    'permit_empty' => false,
+    // folgende Felder leeren, damit NICHT versehentlich der string-provider greift
+    'key'  => '',
+    'keys' => ['default' => ''],
 ];

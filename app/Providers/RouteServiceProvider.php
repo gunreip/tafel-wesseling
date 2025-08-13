@@ -1,4 +1,5 @@
-<?php // /home/gunreip/code/tafel-wesseling/app/Providers/RouteServiceProvider.php
+<?php
+// /home/gunreip/code/tafel-wesseling/app/Providers/RouteServiceProvider.php
 
 namespace App\Providers;
 

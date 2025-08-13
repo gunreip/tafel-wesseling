@@ -1,15 +1,14 @@
-<?php // /home/gunreip/code/tafel-wesseling/routes/admin/web.php
+<?php
+// /home/gunreip/code/tafel-wesseling/routes/admin/web.php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CustomerController;
 
-Route::get('/', function () {
-    // Dashboard → vorerst Activity-Log
-    return view('admin.activitylog.index');
-})->name('dashboard'); // admin.dashboard
-
-Route::get('/activitylog', function () {
-    return view('admin.activitylog.index');
-})->name('activitylog.index'); // admin.activitylog.index
-
-// Simple Health-Check ohne Blade/Icons
-Route::get('/health', fn () => response('OK', 200))->name('health');
+Route::middleware(['web'])
+    ->prefix('admin')
+    ->as('admin.')
+    ->group(function () {
+        Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+        Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    });

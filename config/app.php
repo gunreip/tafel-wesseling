@@ -1,4 +1,5 @@
 <?php
+// /home/gunreip/code/tafel-wesseling/config/app.php
 
 return [
 
@@ -122,5 +123,4 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-    App\Providers\RouteServiceProvider::class,
 ];
