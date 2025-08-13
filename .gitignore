@@ -38,3 +38,6 @@ Thumbs.db
 # Vite/Tailwind
 /.cache
 /.vite
+
+# VSCode helpers
+.vscode/
