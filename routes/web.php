@@ -1,5 +1,4 @@
-<?php
-// /home/gunreip/code/tafel-wesseling/routes/web.php
+<?php // /home/gunreip/code/tafel-wesseling/routes/web.php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
