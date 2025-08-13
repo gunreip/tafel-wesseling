@@ -19,4 +19,3 @@ Wir knüpfen an den Stand vom 2025-08-14 an.
 - Erst Funktionsprüfung im Browser.
 - Fehler → Logs sammeln → Analyse.
 - Danach UI-Verbesserungen.
-
