@@ -1,0 +1,10 @@
+{
+  "intelephense.files.associations": [
+    "**/*.php"
+  ],
+  "intelephense.files.maxSize": 5000000,
+  "intelephense.environment.phpVersion": "8.3",
+  "intelephense.files.includePaths": [
+    ".vscode"
+  ]
+}

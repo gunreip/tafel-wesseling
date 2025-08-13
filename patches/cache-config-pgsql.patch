@@ -1,0 +1,19 @@
+*** Begin Patch
+*** Update File: config/cache.php
+@@
+     'stores' => [
+@@
+-        'database' => [
+-            'driver' => 'database',
+-            'table' => 'cache',
+-            'connection' => null,
+-            'lock_connection' => null,
+-        ],
++        'database' => [
++            'driver' => 'database',
++            'table' => env('CACHE_TABLE', 'cache'),
++            // Erzwinge hier via ENV die Connection (Standard: pgsql)
++            'connection' => env('CACHE_DB_CONNECTION', null),
++            'lock_connection' => env('CACHE_DB_CONNECTION', null),
++        ],
+*** End Patch
