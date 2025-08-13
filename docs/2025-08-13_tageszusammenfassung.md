@@ -38,8 +38,8 @@
 ---
 
 **Nächste Schritte**:
-1. Test mit echtem Insert/Select über Browseroberfläche.
-2. Erste View-Templates für Kundenverwaltung finalisieren.
-3. Frontend-Fehlerhandling für CipherSweet-Validierungen ergänzen.
-4. Optional: Verschlüsselung aller relevanten Felder prüfen (`first_name` aktuell im Klartext).
+1. Funktionsprüfung der Kundenliste im Browser (`/admin/customers`) mit verschlüsselten Feldern.
+2. Falls 500er → Tail in `.tails/save-logs/` ablegen und hochladen.
+3. Erste View-Template-Optimierungen für Kundenverwaltung.
+4. Testlauf pgdump/pgrestore mit aktueller Datenbank.
 
