@@ -1,14 +1,14 @@
-@extends('layouts.admin.app')
+@extends('layouts.app')
 
 @section('title','Kunden')
 
 @section('content')
   <div class="flex items-center justify-between mb-4">
     <h1 class="text-xl font-semibold">Kunden</h1>
-    <a href="{{ route('admin.customers.create') }}" class="px-3 py-2 border rounded">Neu</a>
+    <a href="{{ route('customers.create') }}" class="btn">Neu</a>
   </div>
 
-  <form method="GET" action="{{ route('admin.customers.index') }}" class="mb-4 flex gap-2">
+  <form method="GET" action="{{ route('customers.index') }}" class="mb-4 flex gap-2">
     <input type="text" name="last_name" placeholder="Nachname (Exact-Match)"
            value="{{ request('last_name') }}" class="border rounded px-2 py-1">
     <input type="text" name="email" placeholder="E-Mail (Exact-Match)"
@@ -16,8 +16,8 @@
     <button class="px-3 py-2 border rounded">Suchen</button>
   </form>
 
-  <div class="overflow-x-auto bg-white border rounded">
-    <table class="min-w-full text-sm">
+  <div class="table-box bg-white border">
+    <table class="text-sm">
       <thead class="bg-gray-100">
         <tr>
           <th class="text-left p-2">Kunden-Nr.</th>

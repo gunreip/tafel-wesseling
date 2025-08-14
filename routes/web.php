@@ -1,25 +1,20 @@
-<?php // /home/gunreip/code/tafel-wesseling/routes/web.php
+<?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get','post'], '/session-check', function (Request $request) {
-    if ($request->isMethod('post')) {
-        $data = $request->validate(['note' => ['required','string','max:100']]);
-        $request->session()->put('dev_note', $data['note']); // intern en-US
-        return redirect('/session-check')->with('status', 'Session aktualisiert.');
-    }
-    return view('dev.session-check', [
-        'note' => $request->session()->get('dev_note'),
-        'status' => session('status'),
-    ]);
+Route::get('/', function () {
+    return view('welcome');
 });
 
-// --- Admin Routing Group -----------------------------------------------------
-use Illuminate\Support\Facades\Route as _AdminRouteImport;
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-_AdminRouteImport::middleware('web')
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(base_path('routes/admin/web.php'));
-// ---------------------------------------------------------------------------
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

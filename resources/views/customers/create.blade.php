@@ -1,5 +1,5 @@
 {{-- /home/gunreip/code/tafel-wesseling/resources/views/admin/customers/create.blade.php --}}
-@extends('layouts.admin.app')
+@extends('layouts.app')
 
 @section('title', 'Kunde anlegen')
 
@@ -19,7 +19,7 @@
   </div>
 @endif
 
-<form method="POST" action="{{ route('admin.customers.store') }}" class="space-y-4 max-w-2xl">
+<form method="POST" action="{{ route('customers.store') }}" class="space-y-4 max-w-2xl">
   @csrf
 
   <div class="grid md:grid-cols-2 gap-4">
@@ -46,7 +46,7 @@
 
   <div class="flex items-center gap-3">
     <button class="btn btn-primary">@svg('lucide-save', 'w-4 h-4 mr-2') Speichern</button>
-    <a href="{{ route('admin.customers.index') }}" class="btn btn-ghost">Abbrechen</a>
+    <a href="{{ route('customers.index') }}" class="btn btn-ghost">Abbrechen</a>
   </div>
 </form>
 @endsection

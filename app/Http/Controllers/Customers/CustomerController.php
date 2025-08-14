@@ -1,7 +1,7 @@
 <?php
-// /home/gunreip/code/tafel-wesseling/app/Http/Controllers/Admin/CustomerController.php
+// /home/gunreip/code/tafel-wesseling/app/Http/Controllers/Customers/CustomerController.php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Customers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
@@ -10,37 +10,21 @@ use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
+
     public function index(Request $request)
     {
-        // Eingaben (intern en-US), Labels in Views auf Deutsch
-        $qCustomerNo = trim((string) $request->query('q_customer_no', ''));
-        $qLastName   = trim((string) $request->query('q_last_name', ''));
-        $qEmail      = trim((string) $request->query('q_email', ''));
+        $query = \App\Models\Customer::query()->select(['customer_no', 'first_name', 'last_name', 'email']);
 
-        $query = Customer::query()->orderByDesc('created_at');
-
-        // Optional: customer_no LIKE-Filter (nicht verschlüsselt)
-        if ($qCustomerNo !== '') {
-            $query->where('customer_no', 'ILIKE', "%{$qCustomerNo}%");
+        if ($request->filled('last_name')) {
+            // Exact-Match via Blind-Index (z. B. last_name_eq)
+            $query->whereBlind('last_name', 'last_name_eq', $request->string('last_name'));
         }
-
-        // Exact-Match Suche über Blind-Index
-        if ($qLastName !== '') {
-            $query->whereBlind('last_name', 'last_name_eq', $qLastName);
+        if ($request->filled('email')) {
+            $query->whereBlind('email', 'email_eq', $request->string('email'));
         }
+        $customers = $query->paginate(15);
 
-        if ($qEmail !== '') {
-            $query->whereBlind('email', 'email_eq', $qEmail);
-        }
-
-        $customers = $query->paginate(10)->appends($request->query());
-
-        return view('admin.customers.index', [
-            'customers'   => $customers,
-            'qCustomerNo' => $qCustomerNo,
-            'qLastName'   => $qLastName,
-            'qEmail'      => $qEmail,
-        ]);
+        return view('admin.customers.index', compact('customers'));
     }
 
     public function create()
@@ -54,7 +38,9 @@ class CustomerController extends Controller
         $validated = $request->validate(
             [
                 'customer_no' => [
-                    'required', 'string', 'max:50',
+                    'required',
+                    'string',
+                    'max:50',
                     Rule::unique('customers', 'customer_no'),
                 ],
                 'first_name'  => ['required', 'string', 'max:100'],

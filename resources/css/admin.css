@@ -1,0 +1,57 @@
+/* Admin-Feinschliff – bewusst schlank */
+:root {
+    --admin-radius: .5rem;
+}
+
+main>h1,
+.admin-section-title {
+    margin: .75rem 0 1rem;
+}
+
+/* Container übernimmt Rahmen + Rundung und clippt das Innenleben */
+.table-box {
+    border: 1px solid #d1d5db;
+    border-radius: var(--admin-radius);
+    overflow: hidden;
+    /* ← wichtig: clippt die eckige Tabellenfläche */
+    background: #fff;
+}
+
+/* Tabelle nicht kollabieren lassen, dafür Spacing auf 0 setzen */
+.table-box table {
+    width: 100%;
+    border-collapse: separate;
+    /* ← statt collapse */
+    border-spacing: 0;
+    /* ← keine Lücken */
+}
+
+/* Zell-Linien & Header-Optik */
+.table-box th,
+.table-box td {
+    padding: .625rem .75rem;
+    border-top: 1px solid #e5e7eb;
+    /* nur horizontale Zeilen */
+}
+
+.table-box thead th {
+    background: #f3f4f6;
+    border-top: 0;
+    /* oben übernimmt der Container-Rahmen */
+}
+
+.btn {
+    border: 1px solid #9ca3af;
+    padding: .5rem .75rem;
+    border-radius: var(--admin-radius);
+}
+
+.btn:hover {
+    background: #f9fafb;
+}
+
+/* Admin-only Styles (keine Tailwind-Direktiven nötig, die kommen aus app.css) */
+.autocomplete-dropdown-isocode {
+    max-height: 18rem;
+    overflow: auto;
+}
