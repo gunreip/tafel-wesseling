@@ -48,3 +48,4 @@ Thumbs.db
 # Tails
 /.tails/
 .tails/
+.dump/
