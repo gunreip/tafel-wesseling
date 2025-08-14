@@ -3,30 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>@yield('title', 'Admin')</title>
-  @vite([
-    'resources/css/app.css',
-    'resources/js/app.js',
-    'resources/css/admin.css',
-    'resources/js/admin.js'
-    ])
-  @stack('styles')
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-64.png') }}">
+  <title>@yield('title','Admin')</title>
+
+  {{-- Vite-Assets: Tailwind-Basis + Admin-spezifische Assets --}}
+  @vite(['resources/css/app.css','resources/css/admin.css','resources/js/admin.js'])
+
+  {{-- Favicons (robust via public/) --}}
+  <link rel="icon" href="{{ asset('favicon.ico') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-16.png') }}">
-  <!-- <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}"> -->
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16.png') }}">
+  <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
+  @stack('styles')
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900">
   <header class="border-b bg-white">
-    <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-6">
-      <a href="{{ url('/admin') }}" class="font-semibold">Admin</a>
-      <!-- <a href="{{ route('customers.index') }}">Kunden</a> -->
-      <a href="{{ url('/') }}">Startseite</a>
-    </nav>
+    @can('admin-access')
+      @include('layouts.admin.partials.admin-navbar')
+    @endcan
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    @yield('content')
+  <main class="admin-shell max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6">
+    @can('admin-access')
+      <aside id="admin-sidebar" class="admin-sidebar md:col-span-1" aria-label="Admin-Navigation">
+        @include('layouts.admin.partials.admin-sidebar')
+      </aside>
+    @endcan
+
+    <section class="admin-content md:col-span-1" role="region" aria-label="Hauptinhalt">
+      @yield('content')
+    </section>
   </main>
 
   <footer class="border-t bg-white">

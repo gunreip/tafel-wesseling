@@ -1,57 +1,37 @@
-/* Admin-Feinschliff – bewusst schlank */
-:root {
-    --admin-radius: .5rem;
+/* Admin-Styles (konfliktarm, ohne Tailwind-Direktiven) */
+:root { --admin-radius: .5rem; }
+html { scroll-behavior: smooth; }
+
+/* Shell */
+.admin-shell { min-height: calc(100vh - 120px); } /* grobe Reserve für Header+Footer */
+.admin-content { min-width: 0; } /* verhindert Overflow in CSS-Grids */
+
+/* Sidebar: md+ sichtbar; mobil via Toggle ein-/ausblendbar */
+.admin-sidebar {
+  border: 1px solid #d1d5db;
+  border-radius: var(--admin-radius);
+  background: #fff;
+  padding: .5rem;
+}
+@media (max-width: 767px) {
+  .admin-sidebar { display: none; }
+  .admin-sidebar[data-state="open"] { display: block; margin-bottom: 1rem; }
 }
 
-main>h1,
-.admin-section-title {
-    margin: .75rem 0 1rem;
-}
-
-/* Container übernimmt Rahmen + Rundung und clippt das Innenleben */
+/* Tabelle mit sauberen Ecken (kein collapse) */
 .table-box {
-    border: 1px solid #d1d5db;
-    border-radius: var(--admin-radius);
-    overflow: hidden;
-    /* ← wichtig: clippt die eckige Tabellenfläche */
-    background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: var(--admin-radius);
+  overflow: hidden;
+  background: #fff;
 }
+.table-box table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.table-box th, .table-box td { padding: .625rem .75rem; border-top: 1px solid #e5e7eb; }
+.table-box thead th { background: #f3f4f6; border-top: 0; }
 
-/* Tabelle nicht kollabieren lassen, dafür Spacing auf 0 setzen */
-.table-box table {
-    width: 100%;
-    border-collapse: separate;
-    /* ← statt collapse */
-    border-spacing: 0;
-    /* ← keine Lücken */
-}
+/* Button-Basis */
+.btn { border: 1px solid #9ca3af; padding: .5rem .75rem; border-radius: var(--admin-radius); }
+.btn:hover { background: #f9fafb; }
 
-/* Zell-Linien & Header-Optik */
-.table-box th,
-.table-box td {
-    padding: .625rem .75rem;
-    border-top: 1px solid #e5e7eb;
-    /* nur horizontale Zeilen */
-}
-
-.table-box thead th {
-    background: #f3f4f6;
-    border-top: 0;
-    /* oben übernimmt der Container-Rahmen */
-}
-
-.btn {
-    border: 1px solid #9ca3af;
-    padding: .5rem .75rem;
-    border-radius: var(--admin-radius);
-}
-
-.btn:hover {
-    background: #f9fafb;
-}
-
-/* Admin-only Styles (keine Tailwind-Direktiven nötig, die kommen aus app.css) */
-.autocomplete-dropdown-isocode {
-    max-height: 18rem;
-    overflow: auto;
-}
+/* Optionaler Active-State (wenn nicht via Tailwind-Utilities gesteuert) */
+.active { color: #2563eb; font-weight: 600; }
