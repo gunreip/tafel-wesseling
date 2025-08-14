@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Customers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('customers', CustomerController::class)
+        ->only(['index','create','store','show','edit','update']);
+});
+
 require __DIR__.'/auth.php';
+
+// (Optional) Alt-URL weiterleiten
+Route::permanentRedirect('/admin/customers', '/customers');
