@@ -3,6 +3,7 @@
 use App\Http\Controllers\Customers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,5 +26,17 @@ Route::middleware(['auth'])->group(function () {
 
 require __DIR__.'/auth.php';
 
-// (Optional) Alt-URL weiterleiten
+// Fachbereich „Kunden“ – nur für angemeldete Nutzer mit Gate 'view-customers'
+Route::middleware(['auth','can:view-customers'])->group(function () {
+    Route::resource('customers', CustomerController::class)
+        ->only(['index','create','store','show','edit','update']);
+});
+
+// Admin-Bereich – nur für angemeldete Nutzer mit Gate 'admin-access'
+Route::prefix('admin')->name('admin.')->middleware(['auth','can:admin-access'])->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    // weitere Admin-Routen hier ...
+});
+
+// Alt-URL weiterleiten (optional, falls noch Links existieren)
 Route::permanentRedirect('/admin/customers', '/customers');

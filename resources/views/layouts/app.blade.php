@@ -25,8 +25,11 @@
         <header class="bg-white shadow">
             <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-6">
                 <a href="{{ url('/') }}" class="font-semibold {{ request()->is('/') ? 'text-blue-600' : '' }}">Startseite</a>
-                <a href="{{ route('customers.index') }}" class="{{ request()->routeIs('customers.*') ? 'text-blue-600 font-medium' : '' }}">Kunden</a>
-                <a href="{{ url('/admin') }}">Admin</a>
+                <a href="{{ route('customers.index') }}" class="{{ request()->routeIs('customers.*') ? 'text-blue-600 font-medium' : '' }}">Kunden-alt</a>
+                <a href="{{ url('/admin') }}">Admin-alt</a>
+
+                @can('view-customers') <a href="{{ route('customers.index') }}">Kunden</a> @endcan
+                @can('admin-access') <a href="{{ route('admin.dashboard') }}">Admin</a> @endcan
 
                 <div class="ml-auto flex items-center gap-3">
                     @auth

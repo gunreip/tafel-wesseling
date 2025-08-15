@@ -26,6 +26,8 @@
 *.bak
 *.tgz
 *.tar.gz
+git.private.key
+git.private.key.pub
 
 # IDE/OS
 /.idea/
@@ -43,9 +45,9 @@ Thumbs.db
 .vscode/
 
 # PostgreSQL
-/.dumps/
+/.dump/
+.dump/
 
 # Tails
 /.tails/
 .tails/
-.dump/

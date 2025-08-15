@@ -12,7 +12,7 @@
     <div class="drawer lg:drawer-open">
         <input id="admin-drawer" type="checkbox" class="drawer-toggle"/>
         <div class="drawer-content flex flex-col">
-            @include('layouts.admin.partials.admin-navbar')
+            @include('layouts.admin.partials.nav')
 
             <main class="p-4 lg:p-6">
                 <div class="breadcrumbs text-sm mb-4">
