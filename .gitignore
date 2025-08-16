@@ -22,3 +22,12 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# --- Tafel Wesseling (local/dev) ---
+/.tails/
+/storage/app/tmp/
+/storage/app/private/
+/public/hot
+/public/build/
+*.local.sql
+*.DS_Store
