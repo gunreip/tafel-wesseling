@@ -31,3 +31,9 @@ Thumbs.db
 /public/build/
 *.local.sql
 *.DS_Store
+
+# --- Local overrides ---
+.env
+public/phpinfo.php
+*.bak_*
+/.tails/
