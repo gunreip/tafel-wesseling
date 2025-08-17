@@ -37,3 +37,9 @@ Thumbs.db
 public/phpinfo.php
 *.bak_*
 /.tails/
+
+# Local overrides
+.env
+public/phpinfo.php
+*.bak_*
+/.tails/
