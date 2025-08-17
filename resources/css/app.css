@@ -1,8 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Hinweis:
-   Eigene Hilfsklassen mit @apply fügen wir später wieder ein,
-   dann sauber innerhalb von @layer components.
-*/

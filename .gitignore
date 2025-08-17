@@ -40,6 +40,6 @@ public/phpinfo.php
 
 # Local overrides
 .env
-public/phpinfo.php
+/public/phpinfo.php
 *.bak_*
 /.tails/
