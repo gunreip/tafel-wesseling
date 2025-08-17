@@ -43,3 +43,5 @@ public/phpinfo.php
 /public/phpinfo.php
 *.bak_*
 /.tails/
+/node_modules/
+/vendor/
