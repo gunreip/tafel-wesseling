@@ -12,8 +12,11 @@ class AuthServiceProvider extends ServiceProvider
         // v1: keine Policies nötig
     ];
 
-    public function boot(): void
-    {
+    public function boot(): void {
+        \Illuminate\Support\Facades\Gate::define("view-customers", function (?\App\Models\User $user): bool {
+            return in_array($user?->role, ["user","admin"], true);
+        });
+
         // Wenn ability 'admin-access': admin-Role erlaubt IMMER (überspringt wackelige Registrierungen/Caches)
         Gate::before(function (?User $user, string $ability) {
             if ($ability === 'admin-access') {

@@ -24,3 +24,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+/**
+ * Kundenbereich (sichtbar für role=user und role=admin)
+ * Nur Stub-Antworten, Views kommen im nächsten Schritt.
+ */
+Route::middleware(['auth','can:view-customers'])
+    ->prefix('customers')->as('customers.')
+    ->group(function () {
+        Route::get('/', fn() => view('customers.index'))->name('index');
+        Route::get('/create', fn() => view('customers.create'))->name('create');
+        Route::get('/{customer}', fn($customer) => response("Kunden – Detail (Stub: $customer)", 200))->name('show');
+        Route::get('/{customer}/edit', fn($customer) => response("Kunden – Bearbeiten (Stub: $customer)", 200))->name('edit');
+    });

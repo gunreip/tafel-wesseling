@@ -21,11 +21,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = $request->user();
-        $target = ($user && ($user->role === 'admin'))
+        $target = ($user && $user->role === 'admin')
             ? route('admin.dashboard')
-            : route('dashboard');
+            : route('customers.index');
 
-        // bewusst KEIN intended(): deterministisches Ziel je Rolle
         return redirect()->to($target);
     }
 
