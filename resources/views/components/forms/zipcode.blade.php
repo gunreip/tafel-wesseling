@@ -1,0 +1,9 @@
+<x-input
+    name="zipcode"
+    label="Postleitzahl"
+    type="text"
+    required
+    pattern="[0-9]{5}"
+    inputmode="numeric"
+    autocomplete="postal-code"
+/>

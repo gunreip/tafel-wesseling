@@ -31,6 +31,7 @@ Thumbs.db
 /public/build/
 *.local.sql
 *.DS_Store
+.downloads/*
 
 # --- Local overrides ---
 .env

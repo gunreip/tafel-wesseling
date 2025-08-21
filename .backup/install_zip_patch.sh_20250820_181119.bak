@@ -1,0 +1,101 @@
+#!/bin/bash
+set -euo pipefail
+
+# 👣 Skript aus dem Projektverzeichnis ausführen!
+PROJECT_DIR="$(pwd)"
+DOWNLOADS_DIR="$PROJECT_DIR/.downloads/downloads"
+UNZIPPED_DIR="$PROJECT_DIR/.downloads/.unzipped"
+LOG_FILE="$PROJECT_DIR/.downloads/LOG.md"
+BACKUP_SUFFIX=".bak"
+
+# 🔄 .env (nicht zwingend, aber falls Variablen benötigt werden)
+if [ -f "$PROJECT_DIR/.env" ]; then
+  # shellcheck disable=SC2046
+  export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs || true)
+fi
+
+mkdir -p "$DOWNLOADS_DIR" "$UNZIPPED_DIR"
+
+# 🧾 LOG-Header anlegen, falls fehlt
+if [ ! -f "$LOG_FILE" ]; then
+  printf "| Time | Action | Name | RelPath | Target | Backup | Result |\n" >> "$LOG_FILE"
+  printf "|---|---|---|---|---|---|---|\n" >> "$LOG_FILE"
+fi
+
+# Hilfsfunktion: ISO-Zeit mit Doppelpunkt in der TZ
+iso_time() {
+  local t
+  t=$(date +%Y-%m-%dT%H:%M:%S%z)
+  printf "%s:%s" "${t:0:22}" "${t:22}"
+}
+
+# 📁 Alle ZIPs in DOWNLOADS_DIR verarbeiten
+shopt -s nullglob
+for ZIP_FILE in "$DOWNLOADS_DIR"/*.zip; do
+  [ -e "$ZIP_FILE" ] || continue
+
+  echo "📦 Verarbeite Patch: $(basename "$ZIP_FILE")"
+
+  TMP_DIR="$PROJECT_DIR/.downloads/__tmp_unzip_$(date +%s_%N)"
+  mkdir -p "$TMP_DIR"
+
+  # 📂 Entpacken
+  unzip -q "$ZIP_FILE" -d "$TMP_DIR"
+
+  # 📁 Dateien verschieben und sichern
+  cd "$TMP_DIR"
+  # find für robuste Pfadnamen (Spaces etc.)
+  while IFS= read -r -d '' FILE; do
+    REL_PATH="${FILE#./}"                          # z. B. resources/...
+    DEST="$PROJECT_DIR/$REL_PATH"
+    DEST_DIR=$(dirname "$DEST")
+    BASENAME="$(basename "$DEST")"
+    NAME_NO_EXT="${BASENAME%.*}"                   # z. B. password
+    BACKUP_DIR="$DEST_DIR/.backup"
+    BACKUP_MADE=0
+
+    # 🔐 Backup bei Konflikt
+    if [ -f "$DEST" ]; then
+      mkdir -p "$BACKUP_DIR"
+      TS=$(date +%Y%m%d_%H%M%S)
+      BACKUP_NAME="${BACKUP_DIR}/${BASENAME}_${TS}${BACKUP_SUFFIX}"
+
+      # Älteste Backups löschen (mehr als 5) – robust gegen "keine Treffer"
+      mapfile -t BACKUPS < <(ls -t "$BACKUP_DIR"/"$BASENAME"_*"$BACKUP_SUFFIX" 2>/dev/null || true)
+      if [ "${#BACKUPS[@]}" -ge 5 ]; then
+        # lösche alle ab Index 5
+        for ((i=5; i<${#BACKUPS[@]}; i++)); do
+          rm -f "${BACKUPS[$i]}"
+        done
+      fi
+
+      echo "🛡️  Backup: $DEST → $BACKUP_NAME"
+      mv -f "$DEST" "$BACKUP_NAME"
+      BACKUP_MADE=1
+    fi
+
+    mkdir -p "$DEST_DIR"
+    mv -f "$FILE" "$DEST"
+
+    # 📝 Logging: Target-Pfad mit ~ statt $HOME
+    TARGET_TILDE="${DEST/$HOME/~}"
+    printf "| %s | apply | %s | %s | %s | %d | applied |\n" \
+      "$(iso_time)" "$NAME_NO_EXT" "$REL_PATH" "$TARGET_TILDE" "$BACKUP_MADE" >> "$LOG_FILE"
+
+  done < <(find . -type f -print0)
+
+  cd "$PROJECT_DIR"
+  rm -rf "$TMP_DIR"
+
+  # ✅ ZIP nach .unzipped verschieben (mit Kollisionsschutz)
+  ZIP_BASE="$(basename "$ZIP_FILE")"
+  DEST_ZIP="$UNZIPPED_DIR/$ZIP_BASE"
+  if [ -e "$DEST_ZIP" ]; then
+    TS=$(date +%Y%m%d_%H%M%S)
+    DEST_ZIP="$UNZIPPED_DIR/${ZIP_BASE%.zip}_$TS.zip"
+  fi
+  mv -f "$ZIP_FILE" "$DEST_ZIP"
+  echo "✅ Archiviert: $(basename "$DEST_ZIP")"
+done
+
+echo "🎉 Alle verfügbaren ZIP-Patches wurden verarbeitet."

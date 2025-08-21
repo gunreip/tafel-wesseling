@@ -1,0 +1,93 @@
+#!/bin/bash
+set -euo pipefail
+
+# Must be executed from project root
+PROJECT_DIR="$(pwd)"
+DOWNLOADS_DIR="$PROJECT_DIR/.downloads/downloads"
+UNZIPPED_DIR="$PROJECT_DIR/.downloads/.unzipped"
+LOG_FILE="$PROJECT_DIR/.downloads/LOG.md"
+BACKUP_SUFFIX=".bak"
+
+# Load .env (best-effort)
+if [ -f "$PROJECT_DIR/.env" ]; then
+  # shellcheck disable=SC2046
+  export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs -I{} echo {})
+fi
+
+mkdir -p "$DOWNLOADS_DIR" "$UNZIPPED_DIR"
+
+# Ensure LOG header exists
+if [ ! -f "$LOG_FILE" ]; then
+  printf "| Time | Action | Name | RelPath | Target | Backup | Result |\n" > "$LOG_FILE"
+  printf "|---|---|---|---|---|---|---|\n" >> "$LOG_FILE"
+fi
+
+log_row () {
+  local time_iso action name relpath target backup result
+  time_iso="$(date -Iseconds)"
+  action="$1"; name="$2"; relpath="$3"; target="$4"; backup="$5"; result="$6"
+  printf "| %s | %s | %s | %s | %s | %s | %s |\n" "$time_iso" "$action" "$name" "$relpath" "$target" "$backup" "$result" >> "$LOG_FILE"
+}
+
+shopt -s nullglob
+for ZIP_FILE in "$DOWNLOADS_DIR"/*.zip; do
+  ZIP_BASENAME="$(basename "$ZIP_FILE")"
+  NAME="${ZIP_BASENAME%.zip}"
+
+  TMP_DIR="$PROJECT_DIR/.downloads/__tmp_unzip_$(date +%s%N)"
+  mkdir -p "$TMP_DIR"
+
+  if unzip -q "$ZIP_FILE" -d "$TMP_DIR"; then
+    :
+  else
+    log_row "error" "$NAME" "" "" "0" "unzip_failed"
+    rm -rf "$TMP_DIR"
+    continue
+  fi
+
+  pushd "$TMP_DIR" >/dev/null
+
+  # Process files
+  while IFS= read -r -d '' FILE; do
+    RELPATH="${FILE#./}"
+    DEST="$PROJECT_DIR/$RELPATH"
+    BACKUP_MADE="0"
+
+    if [ -f "$DEST" ]; then
+      DEST_DIR="$(dirname "$DEST")"
+      BASENAME="$(basename "$DEST")"
+      BACKUP_DIR="$DEST_DIR/.backup"
+      mkdir -p "$BACKUP_DIR"
+      TS="$(date +%Y%m%d_%H%M%S)"
+      BACKUP_NAME="${BACKUP_DIR}/${BASENAME}_${TS}${BACKUP_SUFFIX}"
+
+      # prune >5 backups (ignore errors if none)
+      mapfile -t BACKUPS < <(ls -t "$BACKUP_DIR"/"$BASENAME"_*"$BACKUP_SUFFIX" 2>/dev/null || true)
+      if [ "${#BACKUPS[@]}" -ge 5 ]; then
+        for ((i=5; i<${#BACKUPS[@]}; i++)); do rm -f "${BACKUPS[$i]}"; done
+      fi
+
+      mv "$DEST" "$BACKUP_NAME"
+      BACKUP_MADE="1"
+    fi
+
+    mkdir -p "$(dirname "$DEST")"
+    mv "$FILE" "$DEST"
+
+    log_row "apply" "$NAME" "$RELPATH" "$DEST" "$BACKUP_MADE" "applied"
+  done < <(find . -type f -print0)
+
+  popd >/dev/null
+  rm -rf "$TMP_DIR"
+
+  # Move processed ZIP to .unzipped with collision-safe name
+  TARGET_ZIP="$UNZIPPED_DIR/$ZIP_BASENAME"
+  if [ -e "$TARGET_ZIP" ]; then
+    TS="$(date +%Y%m%d_%H%M%S)"
+    TARGET_ZIP="$UNZIPPED_DIR/${ZIP_BASENAME%.zip}_$TS.zip"
+  fi
+  mv "$ZIP_FILE" "$TARGET_ZIP"
+  log_row "archive" "$NAME" "" "$TARGET_ZIP" "0" "archived"
+done
+
+echo "Done."

@@ -1,0 +1,74 @@
+@layer base {
+  :root {
+    --color-bg: #ffffff;
+    --color-fg: #0f172a;
+    --color-primary: #2563eb;
+    --color-primary-fg: #ffffff;
+    --color-muted: #f1f5f9;
+    --color-muted-fg: #334155;
+    --color-ring: #60a5fa;
+
+    --nav-bg: #f8fafc;
+    --nav-bg-active: #e2e8f0;
+    --nav-fg: #334155;
+    --nav-fg-active: #1e293b;
+
+    --nav-item-px: 14px;
+    --nav-item-py: 8px;
+    --nav-gap-y: 4px;
+    --nav-radius: 8px;
+  }
+
+  .dark {
+    --color-bg: #0b1220;
+    --color-fg: #e5e7eb;
+    --color-primary: #60a5fa;
+    --color-primary-fg: #0b1220;
+    --color-muted: #111827;
+    --color-muted-fg: #9ca3af;
+    --color-ring: #93c5fd;
+
+    --nav-bg: #0f172a;
+    --nav-bg-active: #1f2937;
+    --nav-fg: #cbd5e1;
+    --nav-fg-active: #ffffff;
+  }
+}
+
+@layer components {
+  /* Shell */
+  .nav-shell { @apply h-full; background: var(--nav-bg); }
+  .nav-list { @apply list-none m-0 p-2; display: flex; flex-direction: column; gap: var(--nav-gap-y); }
+  .nav-header { @apply px-4 py-3 font-semibold; color: var(--nav-fg); }
+
+  /* Item */
+  .nav-item { @apply rounded-lg flex items-center gap-3 no-underline outline-none; 
+    padding: var(--nav-item-py) var(--nav-item-px); color: var(--nav-fg);
+  }
+  .nav-item.is-active { background: var(--nav-bg-active); color: var(--nav-fg-active); font-weight: 600; }
+  .nav-item.is-hover:hover { @apply cursor-pointer; background: color-mix(in oklab, var(--nav-bg-active) 60%, transparent); }
+  .nav-item.is-focus:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  .nav-item.is-disabled { @apply opacity-50 pointer-events-none; }
+
+  .nav-icon { width: 20px; height: 20px; }
+  .nav-icon svg { width: 100%; height: 100%; }
+  .nav-label { white-space: nowrap; }
+
+  /* Collapsed rail (Desktop) */
+  .is-collapsed .nav-label { @apply sr-only; }
+  .is-collapsed .nav-item { @apply justify-center; }
+  .is-collapsed .nav-shell { width: 72px; }
+
+  /* Expanded (Desktop) */
+  .nav-shell.expanded { width: 280px; }
+
+  /* Mobile Offcanvas */
+  .offcanvas { @apply fixed top-0 left-0 h-full; width: 288px; transform: translateX(-100%); transition: transform 180ms ease; z-index: 40; }
+  .is-open .offcanvas { transform: translateX(0); }
+  .offcanvas-overlay { @apply fixed inset-0; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity 120ms ease; z-index: 30; }
+  .has-overlay .offcanvas-overlay { opacity: 1; pointer-events: auto; }
+
+  /* Skip-Link */
+  .skip-link { @apply absolute left-2 top-2 px-3 py-2 rounded; background: var(--color-primary); color: var(--color-primary-fg); transform: translateY(-150%); }
+  .skip-link:focus { transform: translateY(0); outline: 2px solid var(--color-ring); }
+}

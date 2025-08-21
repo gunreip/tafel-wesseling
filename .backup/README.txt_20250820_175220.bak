@@ -1,0 +1,7 @@
+📦 Laravel Patch ZIP: Eingabe-Komponente „Wohnort“
+
+Diese ZIP-Datei wird automatisch vom install_zip_patch.sh verarbeitet.
+
+✅ Ziel: resources/views/components/forms/wohnort.blade.php
+🛡️  Vorhandene Datei wird gesichert
+📂 Archivierung nach .downloads/.unzipped/

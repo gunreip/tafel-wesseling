@@ -1,0 +1,7 @@
+📦 Laravel Patch ZIP: Eingabe-Komponente „E-Mail“
+
+Diese ZIP-Datei wird automatisch vom install_zip_patch.sh verarbeitet.
+
+✅ Ziel: resources/views/components/forms/email.blade.php
+🛡️  Vorhandene Datei wird gesichert
+📂 Archivierung nach .downloads/.unzipped/
